@@ -1,1 +1,10 @@
-<p>footer works!</p>
+<footer class="bottom-nav">
+  <div class="nav-item" *ngFor="let item of navItems" 
+       [class.active]="item.active" 
+       (click)="item.action ? toggleMenu() : null">
+    <div class="icon">
+      <span class="material-icons-outlined">{{ item.icon }}</span>
+    </div>
+    <span class="label">{{ item.label }}</span>
+  </div>
+</footer>
