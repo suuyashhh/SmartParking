@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../Shared/sidebar.service';
@@ -11,7 +11,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   sidebarService = inject(SidebarService);
   private sanitizer = inject(DomSanitizer);
 
@@ -22,6 +22,10 @@ export class DashboardComponent {
   mapUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
     `https://maps.google.com/maps?q=${this.searchQuery}&t=&z=${this.currentZoom}&ie=UTF8&iwloc=&output=embed`
   );
+
+  ngOnInit() {
+    this.getCurrentLocation();
+  }
 
   toggleSidebar() {
     this.sidebarService.toggle();
