@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   searchQuery: string = '';
   isDirectionsMode: boolean = false;
+  routeInfo: { distance: string, duration: string } | null = null;
   
   private map: any;
   private userMarker: any = null;
@@ -33,15 +34,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   initMap() {
-    // Init map with Kolhapur coords as default or any center
     this.map = L.map('map').setView([18.5204, 73.8567], 14);
 
-    // Add free OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
 
-    // Initial Parking Spot Marker
     this.defaultParkingIcon = L.icon({
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/3005/3005355.png', 
       iconSize: [38, 38],
@@ -61,9 +59,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   onSearch() {
-    this.isDirectionsMode = false;
+    if (this.isDirectionsMode) {
+      this.stopDirections();
+    }
     
-    // Clear previous generic routes
     if (this.routeLayer) {
         this.map.removeLayer(this.routeLayer);
         this.routeLayer = null;
@@ -71,7 +70,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     if (!this.searchQuery.trim()) return;
 
-    // Nominatim Geocoding API
     fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(this.searchQuery)}&format=json`)
       .then(r => r.json())
       .then(data => {
@@ -91,7 +89,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       .catch(e => console.error("Search error", e));
   }
 
-  getDirections() {
+  getDirections(fitBounds: boolean = true) {
       if (!this.destinationMarker) {
          alert("Please search for a destination first!");
          return;
@@ -103,11 +101,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
       this.isDirectionsMode = true;
 
-      // Destination:
       const destLat = this.destinationMarker.getLatLng().lat;
       const destLon = this.destinationMarker.getLatLng().lng;
       
-      // Start (Live User Location)
       const startLat = this.userLocation.lat;
       const startLon = this.userLocation.lng;
 
@@ -118,43 +114,65 @@ export class DashboardComponent implements OnInit, AfterViewInit {
               this.map.removeLayer(this.routeLayer);
             }
             if (data.routes && data.routes.length > 0) {
-               this.routeLayer = L.geoJSON(data.routes[0].geometry, {
+               const route = data.routes[0];
+               this.routeLayer = L.geoJSON(route.geometry, {
                   style: { color: '#1a73e8', weight: 5, opacity: 0.8 }
                }).addTo(this.map);
 
-               this.map.fitBounds(this.routeLayer.getBounds(), { padding: [50, 50] });
+               if (fitBounds) {
+                   this.map.fitBounds(this.routeLayer.getBounds(), { padding: [50, 50] });
+               }
+
+               const distKm = (route.distance / 1000).toFixed(1);
+               const durMin = Math.ceil(route.duration / 60);
+               this.routeInfo = {
+                   distance: `${distKm} km`,
+                   duration: `${durMin} min`
+               };
             }
         }).catch(err => {
             console.error("OSRM Route Error", err);
-            alert("Could not fetch route right now.");
         });
   }
 
-  getCurrentLocation() {
-    this.map.locate({ setView: true, maxZoom: 16 });
+  stopDirections() {
+      this.isDirectionsMode = false;
+      this.routeInfo = null;
+      if (this.routeLayer) {
+          this.map.removeLayer(this.routeLayer);
+          this.routeLayer = null;
+      }
+      if (this.userLocation) {
+          this.map.setView([this.userLocation.lat, this.userLocation.lng], 15);
+      }
+  }
 
-    // Handle user location success
+  getCurrentLocation() {
+    this.map.locate({ setView: true, maxZoom: 16, watch: true });
+
+    const userIcon = L.icon({
+       iconUrl: 'https://cdn-icons-png.flaticon.com/512/7133/7133312.png',
+       iconSize: [40, 40],
+       iconAnchor: [20, 20]
+    });
+
     this.map.on('locationfound', (e: any) => {
         this.userLocation = { lat: e.latlng.lat, lng: e.latlng.lng };
 
-        if (this.userMarker) {
-            this.map.removeLayer(this.userMarker);
+        if (!this.userMarker) {
+            this.userMarker = L.marker(e.latlng, { icon: userIcon })
+               .addTo(this.map)
+               .bindPopup('<b>You are here</b>');
+        } else {
+            this.userMarker.setLatLng(e.latlng);
         }
         
-        // Custom user icon - explicitly smaller with different URL so it looks like a person pos
-        const userIcon = L.icon({
-           iconUrl: 'https://cdn-icons-png.flaticon.com/512/7133/7133312.png',
-           iconSize: [40, 40],
-           iconAnchor: [20, 20]
-        });
-
-        // Marker for user's Current Location
-        this.userMarker = L.marker(e.latlng, { icon: userIcon })
-           .addTo(this.map)
-           .bindPopup('<b>You are here</b>').openPopup();
+        // Live update route actively if moving towards destination
+        if (this.isDirectionsMode && this.destinationMarker) {
+            this.getDirections(false);
+        }
     });
 
-    // Handle user location denied or failed
     this.map.on('locationerror', (e: any) => {
       console.warn("Could not find location", e.message);
     });

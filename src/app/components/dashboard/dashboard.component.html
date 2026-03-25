@@ -32,6 +32,18 @@
             </div>
         </div>
 
+        <!-- Live Route Info Card -->
+        <div class="route-info-card" *ngIf="isDirectionsMode && routeInfo">
+            <div class="route-info-content">
+                <div class="route-eta">
+                    <span class="material-icons-outlined text-green">two_wheeler</span>
+                    <h2>{{ routeInfo.duration }}</h2>
+                </div>
+                <p class="route-distance">{{ routeInfo.distance }} to destination</p>
+                <button class="stop-btn" (click)="stopDirections()">Exit Navigation</button>
+            </div>
+        </div>
+
         <!-- Float Control Buttons -->
         <div class="map-controls">
             <button class="control-btn" (click)="getCurrentLocation()" title="My Location">
