@@ -10,5 +10,9 @@ export const PARKING_ROUTES : Routes = [
     {
         path:'dashboard',
         loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
+    },
+    {
+        path:'parking-lots',
+        loadComponent: () => import('./parking-provider/parking-provider.component').then(m => m.ParkingProviderComponent)
     }
 ];
