@@ -19,9 +19,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   isDirectionsMode: boolean = false;
   
   private map: any;
-  private currentMarker: any;
-  private routeLayer: any;
+  private userMarker: any = null;
+  private destinationMarker: any = null;
+  private routeLayer: any = null;
   private defaultParkingIcon: any;
+  private userLocation: { lat: number, lng: number } | null = null;
 
   ngOnInit() {
   }
@@ -41,9 +43,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     // Initial Parking Spot Marker
     this.defaultParkingIcon = L.icon({
-      // We use a safe external fallback for the icon just like Zomato/Swiggy pin
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/3005/3005355.png', 
-      iconSize: [38, 38]
+      iconSize: [38, 38],
+      iconAnchor: [19, 38],
+      popupAnchor: [0, -38]
     });
 
     L.marker([18.5204, 73.8567], { icon: this.defaultParkingIcon })
@@ -60,9 +63,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   onSearch() {
     this.isDirectionsMode = false;
     
-    // Clear previous generic routes if searching new
+    // Clear previous generic routes
     if (this.routeLayer) {
         this.map.removeLayer(this.routeLayer);
+        this.routeLayer = null;
     }
 
     if (!this.searchQuery.trim()) return;
@@ -76,10 +80,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           const lon = parseFloat(data[0].lon);
           this.map.flyTo([lat, lon], 15);
           
-          if (this.currentMarker) {
-            this.map.removeLayer(this.currentMarker);
+          if (this.destinationMarker) {
+            this.map.removeLayer(this.destinationMarker);
           }
-          this.currentMarker = L.marker([lat, lon]).addTo(this.map).bindPopup(data[0].display_name).openPopup();
+          this.destinationMarker = L.marker([lat, lon]).addTo(this.map).bindPopup(data[0].display_name).openPopup();
         } else {
           alert("Location not found.");
         }
@@ -88,16 +92,24 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getDirections() {
-      // Use OSRM for generic routing from center to Kolhapur default parking
-      if (!this.currentMarker) return;
+      if (!this.destinationMarker) {
+         alert("Please search for a destination first!");
+         return;
+      }
+      if (!this.userLocation) {
+         alert("Your live location is not available. Please allow location access or click the 'My Location' button.");
+         return;
+      }
+
       this.isDirectionsMode = true;
 
-      // From User Location to our Default Parking:
-      const destLat = 18.5204;
-      const destLon = 73.8567;
+      // Destination:
+      const destLat = this.destinationMarker.getLatLng().lat;
+      const destLon = this.destinationMarker.getLatLng().lng;
       
-      const startLat = this.currentMarker.getLatLng().lat;
-      const startLon = this.currentMarker.getLatLng().lng;
+      // Start (Live User Location)
+      const startLat = this.userLocation.lat;
+      const startLon = this.userLocation.lng;
 
       fetch(`https://router.project-osrm.org/route/v1/driving/${startLon},${startLat};${destLon},${destLat}?overview=full&geometries=geojson`)
         .then(r => r.json())
@@ -123,12 +135,23 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     // Handle user location success
     this.map.on('locationfound', (e: any) => {
-        if (this.currentMarker) {
-            this.map.removeLayer(this.currentMarker);
+        this.userLocation = { lat: e.latlng.lat, lng: e.latlng.lng };
+
+        if (this.userMarker) {
+            this.map.removeLayer(this.userMarker);
         }
         
+        // Custom user icon - explicitly smaller with different URL so it looks like a person pos
+        const userIcon = L.icon({
+           iconUrl: 'https://cdn-icons-png.flaticon.com/512/7133/7133312.png',
+           iconSize: [40, 40],
+           iconAnchor: [20, 20]
+        });
+
         // Marker for user's Current Location
-        this.currentMarker = L.marker(e.latlng).addTo(this.map).bindPopup('<b>You are here</b><br>Your Live Location').openPopup();
+        this.userMarker = L.marker(e.latlng, { icon: userIcon })
+           .addTo(this.map)
+           .bindPopup('<b>You are here</b>').openPopup();
     });
 
     // Handle user location denied or failed
@@ -145,3 +168,4 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.map.zoomOut();
   }
 }
+

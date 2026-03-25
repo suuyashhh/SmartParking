@@ -11,13 +11,10 @@
         <!-- Floating Google Maps search UI -->
         <div class="map-search-overlay">
             <div class="search-box" [class.active]="isDirectionsMode">
-                <button class="menu-trigger" (click)="toggleSidebar()">
-                    <span class="material-icons-outlined">menu</span>
-                </button>
                 <input type="text" 
                        [(ngModel)]="searchQuery" 
                        (keyup.enter)="onSearch()" 
-                       placeholder="{{ isDirectionsMode ? 'Choose destination...' : 'Search Google Maps' }}" 
+                       placeholder="{{ isDirectionsMode ? 'Choose destination...' : 'Search OpenStreetMap' }}" 
                        class="search-input">
                 <button class="icon-btn" (click)="onSearch()">
                     <span class="material-icons-outlined">search</span>
