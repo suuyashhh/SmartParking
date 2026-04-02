@@ -19,7 +19,6 @@
 
     <div class="sidebar-tabs">
         <button [class.active]="activeTab === 'categories'" (click)="activeTab = 'categories'">CATEGORIES</button>
-        <button [class.active]="activeTab === 'brands'" (click)="activeTab = 'brands'">BRANDS</button>
     </div>
 
     <div class="categories-list" *ngIf="activeTab === 'categories'">

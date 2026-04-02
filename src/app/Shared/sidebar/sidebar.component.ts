@@ -26,7 +26,7 @@ export class SidebarComponent {
     { name: 'Performance Nutrition', hasSub: true },
     { name: 'Vitamins and Supplements', hasSub: true },
     { name: 'Health Food and Drinks', hasSub: true },
-    { name: 'Workout Gear', hasSub: true }
+    { name: 'Login', hasSub: true, link: '/Parking/providerlogin' }
   ];
 
   menuItems = [

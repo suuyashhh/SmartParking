@@ -19,8 +19,8 @@ export class FooterComponent {
 
   navItems = [
     { icon: 'home', label: 'Home', active: true, link: '/Parking/dashboard' },
+    { icon: 'local_parking', label: 'Parking', active: false, link: '/Parking/parking-provider' },
     { icon: 'menu', label: 'Menu', active: false, action: true },
-    { icon: 'shopping_bag', label: 'Orders', active: false, link: '/Parking/parking-provider' },
-    { icon: 'person', label: 'Account', active: false }
+    
   ];
 }

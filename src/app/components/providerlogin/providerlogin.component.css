@@ -1,0 +1,242 @@
+.login-container {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('/assets/parking_bg.png');
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding-bottom: 70px; /* footer offset */
+}
+
+.background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+    z-index: 1;
+}
+
+.back-btn {
+    position: absolute;
+    top: 25px;
+    left: 20px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.login-card-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+    box-sizing: border-box;
+    animation: slideUpFade 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 40px 30px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.card-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.logo-area {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+}
+
+.logo-area span {
+    color: white;
+    font-size: 32px;
+}
+
+h2 {
+    color: white;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+}
+
+.card-header p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin: 0;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-container span {
+    position: absolute;
+    left: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 20px;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 15px 15px 15px 48px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #4facfe;
+    box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.1);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 0 5px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.remember-me input {
+    accent-color: #4facfe;
+    cursor: pointer;
+}
+
+.forgot-link {
+    color: #4facfe;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0, 242, 254, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(0, 242, 254, 0.4);
+}
+
+.btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.card-footer {
+    text-align: center;
+    margin-top: 30px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.register-link {
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 400px) {
+    .login-card {
+        padding: 30px 20px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+}
