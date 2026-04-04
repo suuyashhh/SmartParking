@@ -19,11 +19,12 @@
 
     <div class="sidebar-tabs">
         <button [class.active]="activeTab === 'categories'" (click)="activeTab = 'categories'">CATEGORIES</button>
-        <button [class.active]="activeTab === 'brands'" (click)="activeTab = 'brands'">BRANDS</button>
     </div>
 
     <div class="categories-list" *ngIf="activeTab === 'categories'">
-        <div class="category-item" *ngFor="let category of categories">
+        <div class="category-item" *ngFor="let category of categories" 
+             [routerLink]="category.link || null"
+             (click)="category.link ? closeSidebar() : null">
             <span class="category-name">{{ category.name }}</span>
             <svg *ngIf="category.hasSub" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/></svg>
         </div>

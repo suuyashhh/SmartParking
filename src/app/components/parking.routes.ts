@@ -13,5 +13,10 @@ export const PARKING_ROUTES : Routes = [
     {
         path:'parking-provider',
         loadComponent: () => import('./parking-provider/parking-provider.component').then(m => m.ParkingProviderComponent)
+    },
+    {
+        path:'providerlogin',
+        redirectTo: '/provider-login',
+        pathMatch: 'full'
     }
 ];
