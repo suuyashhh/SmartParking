@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../../Shared/api.service';
 
 @Component({
   selector: 'app-parking-provider',
@@ -10,6 +11,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './parking-provider.component.css'
 })
 export class ParkingProviderComponent implements OnInit {
+  apiService = inject(ApiService);
   isModalOpen = false;
 
   parkingData = {
@@ -22,11 +24,15 @@ export class ParkingProviderComponent implements OnInit {
     vehicleType: '2' // '2' for 2-wheeler, '4' for 4-wheeler
   };
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getLocation();
+  }
 
   openModal() {
     this.isModalOpen = true;
-    this.getLocation();
+    if (!this.parkingData.latitude || !this.parkingData.longitude) {
+      this.getLocation();
+    }
   }
 
   closeModal() {
@@ -35,6 +41,12 @@ export class ParkingProviderComponent implements OnInit {
 
   getLocation() {
     if (navigator.geolocation) {
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.parkingData.latitude = position.coords.latitude.toString();
@@ -42,7 +54,8 @@ export class ParkingProviderComponent implements OnInit {
         },
         (error) => {
           console.error('Error getting location', error);
-        }
+        },
+        options
       );
     } else {
       console.error('Geolocation is not supported by this browser.');

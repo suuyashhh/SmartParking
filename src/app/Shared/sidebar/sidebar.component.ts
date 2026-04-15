@@ -40,10 +40,11 @@ export class SidebarComponent {
   activeTab: string = 'categories';
 
   categories = [
-    { name: 'Performance Nutrition', hasSub: true },
-    { name: 'Vitamins and Supplements', hasSub: true },
-    { name: 'Health Food and Drinks', hasSub: true },
-    { name: 'Login', hasSub: true, link: '/provider-login' }
+    { name: 'Dashboard', icon: 'dashboard', link: '/Parking/dashboard', hasSub: false },
+    { name: 'Provide Parking', icon: 'local_parking', link: '/Parking/parking-provider', hasSub: false },
+    { name: 'Parking History', icon: 'history', hasSub: false },
+    { name: 'Support', icon: 'help_outline', hasSub: false },
+    { name: 'Login', icon: 'login', link: '/provider-login', hasSub: false }
   ];
 
   menuItems = [

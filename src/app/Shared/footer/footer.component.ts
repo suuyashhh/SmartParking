@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../sidebar.service';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-footer',
@@ -12,15 +13,21 @@ import { RouterLink } from '@angular/router';
 })
 export class FooterComponent {
   sidebarService = inject(SidebarService);
+  authService = inject(AuthService);
 
   toggleMenu() {
     this.sidebarService.toggle();
   }
 
-  navItems = [
-    { icon: 'home', label: 'Home', active: true, link: '/Parking/dashboard' },
-    { icon: 'local_parking', label: 'Parking', active: false, link: '/Parking/parking-provider' },
-    { icon: 'menu', label: 'Menu', active: false, action: true },
+  get navItems() {
+    const isLoggedIn = this.authService.isLoggedIn();
     
-  ];
+    return [
+      { icon: 'home', label: 'Home', active: true, link: '/Parking/dashboard' },
+      isLoggedIn 
+        ? { icon: 'local_parking', label: 'Provide', active: false, link: '/Parking/parking-provider' }
+        : { icon: 'search', label: 'Search', active: false, link: '/Parking/parking-seeker' },
+      { icon: 'menu', label: 'Menu', active: false, action: true },
+    ];
+  }
 }

@@ -2,6 +2,7 @@ import { Component, inject, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../Shared/sidebar.service';
+import { ApiService } from '../../Shared/api.service';
 
 declare const L: any;
 
@@ -14,6 +15,7 @@ declare const L: any;
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   sidebarService = inject(SidebarService);
+  apiService = inject(ApiService);
 
   searchQuery: string = '';
   isDirectionsMode: boolean = false;
@@ -70,9 +72,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     if (!this.searchQuery.trim()) return;
 
-    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(this.searchQuery)}&format=json`)
-      .then(r => r.json())
-      .then(data => {
+    this.apiService.get(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(this.searchQuery)}&format=json`).subscribe({
+      next: (data: any) => {
         if (data && data.length > 0) {
           const lat = parseFloat(data[0].lat);
           const lon = parseFloat(data[0].lon);
@@ -85,8 +86,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         } else {
           alert("Location not found.");
         }
-      })
-      .catch(e => console.error("Search error", e));
+      },
+      error: (e: any) => console.error("Search error", e)
+    });
   }
 
   getDirections(fitBounds: boolean = true) {
@@ -107,9 +109,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       const startLat = this.userLocation.lat;
       const startLon = this.userLocation.lng;
 
-      fetch(`https://router.project-osrm.org/route/v1/driving/${startLon},${startLat};${destLon},${destLat}?overview=full&geometries=geojson`)
-        .then(r => r.json())
-        .then(data => {
+      this.apiService.get(`https://router.project-osrm.org/route/v1/driving/${startLon},${startLat};${destLon},${destLat}?overview=full&geometries=geojson`).subscribe({
+        next: (data: any) => {
             if (this.routeLayer) {
               this.map.removeLayer(this.routeLayer);
             }
@@ -130,9 +131,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                    duration: `${durMin} min`
                };
             }
-        }).catch(err => {
-            console.error("OSRM Route Error", err);
-        });
+        },
+        error: (err: any) => console.error("OSRM Route Error", err)
+      });
   }
 
   stopDirections() {

@@ -47,7 +47,12 @@
             </div>
             <div class="form-group">
               <label>Longitude</label>
-              <input type="text" name="longitude" [(ngModel)]="parkingData.longitude" readonly placeholder="Fetching...">
+              <div class="input-with-icon">
+                <input type="text" name="longitude" [(ngModel)]="parkingData.longitude" readonly placeholder="Fetching...">
+                <button type="button" class="refresh-loc-btn" (click)="getLocation()" title="Refresh Location">
+                  <span class="material-icons-outlined">my_location</span>
+                </button>
+              </div>
             </div>
           </div>
 
