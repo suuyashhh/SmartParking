@@ -2,9 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment.prod';
 import { AuthService } from '../../Shared/auth.service';
+import { ApiService } from '../../Shared/api.service';
 
 @Component({
   selector: 'app-provider-login',
@@ -15,9 +14,8 @@ import { AuthService } from '../../Shared/auth.service';
 })
 export class ProviderLoginComponent {
   private router = inject(Router);
-  private http = inject(HttpClient);
+  private apiService = inject(ApiService);
   private authService = inject(AuthService);
-  private baseUrl = environment.BASE_URL;
   hidePassword = true;
   isEmailFocused = false;
   isPasswordFocused = false;
@@ -43,7 +41,7 @@ export class ProviderLoginComponent {
 
     const body = { PHONE: this.loginData.phone, PASS: this.loginData.password };
 
-    this.http.post(`${this.baseUrl}ParkingLogin/login`, body).subscribe({
+    this.apiService.post('ParkingLogin/login', body).subscribe({
       next: (response: any) => {
         this.isLoading = false;
         console.log('Login successful:', response);
@@ -59,11 +57,7 @@ export class ProviderLoginComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        if (err.status === 401) {
-          this.errorMessage = 'Invalid credentials. Please verify your phone and password.';
-        } else {
-          this.errorMessage = 'Login failed. Please try again.';
-        }
+        this.errorMessage = this.apiService.extractErrorMessage(err);
         console.error('Auth error:', err);
       }
     });

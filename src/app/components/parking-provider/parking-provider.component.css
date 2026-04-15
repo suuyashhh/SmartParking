@@ -372,3 +372,37 @@ input:read-only {
   background-color: #ccc;
   border-radius: 3px;
 }
+/* Input with Icon */
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon input {
+  padding-right: 45px !important;
+}
+
+.refresh-loc-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #667eea;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.refresh-loc-btn:hover {
+  background: rgba(102, 126, 234, 0.1);
+  transform: rotate(30deg);
+}
+
+.refresh-loc-btn span {
+  font-size: 20px;
+}
