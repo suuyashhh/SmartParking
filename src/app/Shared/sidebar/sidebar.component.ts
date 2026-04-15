@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarService } from '../sidebar.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,12 +13,27 @@ import { SidebarService } from '../sidebar.service';
 })
 export class SidebarComponent {
   sidebarService = inject(SidebarService);
+  authService = inject(AuthService);
+
+  get userName(): string {
+    const user = this.authService.getCurrentUser();
+    return user?.name || user?.NAME || 'Guest User';
+  }
+
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
 
   get isOpen() {
     return this.sidebarService.isOpen;
   }
 
   closeSidebar() {
+    this.sidebarService.close();
+  }
+
+  onLogout() {
+    this.authService.logout();
     this.sidebarService.close();
   }
 
