@@ -54,19 +54,24 @@
         <span>or use your work email</span>
       </div>
 
+      <!-- Error Message -->
+      <div class="error-banner" *ngIf="errorMessage">
+        <span class="material-icons-outlined">error_outline</span>
+        <span>{{ errorMessage }}</span>
+      </div>
+
       <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="auth-form">
         <div class="input-group">
-          <label for="email">Work Email</label>
+          <label for="phone">Phone Number</label>
           <div class="input-wrapper" [class.focused]="isEmailFocused">
-            <span class="material-icons-outlined field-icon">alternate_email</span>
+            <span class="material-icons-outlined field-icon">phone</span>
             <input
-              id="email"
-              type="email"
-              name="email"
-              [(ngModel)]="loginData.email"
+              id="phone"
+              type="tel"
+              name="phone"
+              [(ngModel)]="loginData.phone"
               required
-              email
-              placeholder="name@company.com"
+              placeholder="Enter your phone number"
               (focus)="isEmailFocused = true"
               (blur)="isEmailFocused = false"
             />
@@ -83,7 +88,6 @@
               name="password"
               [(ngModel)]="loginData.password"
               required
-              minlength="6"
               placeholder="••••••••"
               (focus)="isPasswordFocused = true"
               (blur)="isPasswordFocused = false"
@@ -110,9 +114,10 @@
           <a class="forgot-link">Forgot password?</a>
         </div>
 
-        <button type="submit" class="primary-btn" [disabled]="loginForm.invalid">
-          <span>Authenticate Now</span>
-          <span class="material-icons-outlined">login</span>
+        <button type="submit" class="primary-btn" [disabled]="!loginData.phone || !loginData.password || isLoading">
+          <span *ngIf="isLoading" class="spinner"></span>
+          <span>{{ isLoading ? 'Authenticating...' : 'Authenticate Now' }}</span>
+          <span *ngIf="!isLoading" class="material-icons-outlined">login</span>
         </button>
       </form>
 

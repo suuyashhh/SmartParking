@@ -517,3 +517,38 @@
     text-align: center;
   }
 }
+
+/* Error Banner */
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: hsl(0, 80%, 96%);
+  border: 1px solid hsl(0, 70%, 85%);
+  color: hsl(0, 65%, 45%);
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  animation: fadeUp 0.4s ease forwards;
+}
+
+.error-banner .material-icons-outlined {
+  font-size: 1.3rem;
+  color: hsl(0, 65%, 50%);
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { authGuard } from '../Shared/auth.guard';
 
 export const PARKING_ROUTES : Routes = [
     {
@@ -8,10 +9,12 @@ export const PARKING_ROUTES : Routes = [
     },
     {
         path:'dashboard',
+        canActivate: [authGuard],
         loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
     },
     {
         path:'parking-provider',
+        canActivate: [authGuard],
         loadComponent: () => import('./parking-provider/parking-provider.component').then(m => m.ParkingProviderComponent)
     },
     {
@@ -20,3 +23,4 @@ export const PARKING_ROUTES : Routes = [
         pathMatch: 'full'
     }
 ];
+

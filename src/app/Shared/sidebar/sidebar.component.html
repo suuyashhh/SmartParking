@@ -2,7 +2,7 @@
 
 <div class="sidebar-container" [class.open]="sidebarService.isOpen">
     <div class="sidebar-header">
-        <h2 class="user-greeting">Hi Suyash Prakash Patil</h2>
+        <h2 class="user-greeting">Hi {{ userName }}</h2>
         <button class="close-btn" (click)="closeSidebar()">
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
         </button>
@@ -27,6 +27,10 @@
              (click)="category.link ? closeSidebar() : null">
             <span class="category-name">{{ category.name }}</span>
             <svg *ngIf="category.hasSub" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+        </div>
+        <div class="category-item" *ngIf="isLoggedIn" (click)="onLogout()">
+            <span class="category-name" style="color: #ea4335;">Logout</span>
+            <span class="material-icons-outlined" style="color: #ea4335;">logout</span>
         </div>
     </div>
 </div>
