@@ -47,11 +47,4 @@ export class SidebarComponent {
     { name: 'Login', icon: 'login', link: '/provider-login', hasSub: false }
   ];
 
-  menuItems = [
-    { icon: 'shopping_bag', name: 'My Orders' },
-    { icon: 'verified', name: 'Authenticity' },
-    { icon: 'storefront', name: 'Nutrabay Products' },
-    { icon: 'local_offer', name: 'Offers' },
-    { icon: 'favorite', name: 'Support' }
-  ];
 }
