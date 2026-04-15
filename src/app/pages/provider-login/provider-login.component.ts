@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.prod';
-import { AuthService } from '../../Shared/auth.service'; @Component({
+import { AuthService } from '../../Shared/auth.service';
+
+@Component({
   selector: 'app-provider-login',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],

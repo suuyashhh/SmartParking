@@ -146,6 +146,17 @@
     cursor: pointer;
 }
 
+.category-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.category-icon {
+    font-size: 20px;
+    color: #666;
+}
+
 .category-name {
     font-size: 0.95rem;
     color: #333;
