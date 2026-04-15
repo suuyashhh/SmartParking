@@ -8,14 +8,7 @@
         </button>
     </div>
 
-    <nav class="action-grid">
-        <div class="action-item" *ngFor="let item of menuItems">
-            <div class="icon-container">
-                <span class="material-icons-outlined">{{ item.icon }}</span>
-            </div>
-            <span class="action-label">{{ item.name }}</span>
-        </div>
-    </nav>
+   
 
     <div class="sidebar-tabs">
         <button [class.active]="activeTab === 'categories'" (click)="activeTab = 'categories'">CATEGORIES</button>
