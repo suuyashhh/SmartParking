@@ -19,6 +19,10 @@ export const PARKING_ROUTES : Routes = [
         path:'providerlogin',
         redirectTo: '/provider-login',
         pathMatch: 'full'
+    },
+    {
+        path:'parking-seeker',
+        loadComponent: () => import('./parking-seeker/parking-seeker.component').then(m => m.ParkingSeekerComponent)
     }
 ];
 
