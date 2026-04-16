@@ -8,7 +8,7 @@ import * as CryptoJS from 'crypto-js';
 @Injectable({ providedIn: 'root' })
 export class ApiService {
 
-  private baseUrl = environment.BASE_URL.replace(/\/+$/, '') + '/';
+  public baseUrl = environment.BASE_URL.replace(/\/+$/, '') + '/';
 
   constructor(
     private http: HttpClient,
@@ -87,16 +87,31 @@ export class ApiService {
   /**
    * Standard Headers including Auth Token
    */
-  private getHeaders(extra: Record<string, string> = {}): HttpHeaders {
+  /**
+   * Standard Headers including Auth Token
+   */
+  private getHeaders(extra: Record<string, string | null> = {}): HttpHeaders {
     const user = this.auth.getCurrentUser();
     const token = user?.token || user?.TOKEN;
 
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       'Cache-Control': 'no-store',
       'Pragma': 'no-cache',
       'X-Requested-With': 'XMLHttpRequest',
-      ...extra
+    });
+
+    // Default Content-Type to JSON unless explicitly overridden or removed
+    if (extra['Content-Type'] === undefined) {
+      headers = headers.set('Content-Type', 'application/json');
+    } else if (extra['Content-Type'] !== null) {
+      headers = headers.set('Content-Type', extra['Content-Type']!);
+    }
+
+    // Add other headers
+    Object.keys(extra).forEach(key => {
+      if (key !== 'Content-Type' && extra[key] !== null) {
+        headers = headers.set(key, extra[key]!);
+      }
     });
 
     if (token) {
@@ -131,7 +146,7 @@ export class ApiService {
   post<T = any>(
     endpoint: string,
     body: any,
-    additionalHeaders: Record<string, string> = {}
+    additionalHeaders: Record<string, string | null> = {}
   ) {
     const operatorMeta = this.getOperatorMeta();
 
@@ -145,6 +160,26 @@ export class ApiService {
       observe: 'body'
     });
   }
+
+  /**
+   * Post FormData (for file uploads)
+   */
+  postFormData<T = any>(endpoint: string, formData: FormData) {
+    const operatorMeta = this.getOperatorMeta();
+    
+    // Append operator metadata to FormData
+    Object.entries(operatorMeta).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+            formData.append(key, value.toString());
+        }
+    });
+
+    return this.http.post<T>(`${this.baseUrl}${endpoint}`, formData, {
+      headers: this.getHeaders({ 'Content-Type': null }), // Let browser set Content-Type with boundary
+      observe: 'body'
+    });
+  }
+
 
   put<T = any>(
     endpoint: string,

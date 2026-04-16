@@ -4,16 +4,38 @@
     <p>List your parking space to start earning.</p>
   </div>
 
-  <div class="empty-state" *ngIf="true">
+  <div class="empty-state" *ngIf="parkingList.length === 0">
     <div class="empty-icon material-icons-outlined">local_parking</div>
     <h3>No spaces listed yet</h3>
     <p>Tap the + button to add your first parking location.</p>
   </div>
 
+  <!-- Parking Grid -->
+  <div class="parking-grid" *ngIf="parkingList.length > 0">
+    <div class="parking-card" *ngFor="let spot of parkingList" (click)="viewDetails(spot)">
+      <div class="card-image">
+        <img [src]="getSpotImage(spot.img1)" *ngIf="spot.img1" alt="Parking spot">
+        <div class="no-img" *ngIf="!spot.img1">
+           <span class="material-icons-outlined">image</span>
+        </div>
+        <div class="price-tag">₹{{spot.price}}/hr</div>
+      </div>
+      <div class="card-info">
+        <div class="vehicle-type">
+           <span class="material-icons-outlined">{{spot.vehicalType === '2' ? 'moped' : 'directions_car'}}</span>
+           {{spot.vehicalType === '2' ? '2-Wheeler' : '4-Wheeler'}}
+        </div>
+        <p class="address">{{spot.fullAddress}}</p>
+      </div>
+    </div>
+  </div>
+
   <!-- FAB -->
+
   <button class="fab" (click)="openModal()">
     <span class="material-icons-outlined">add</span>
   </button>
+
 
   <!-- Modal -->
   <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
@@ -76,19 +98,20 @@
           <div class="form-group">
             <label>Upload Images (Max 4)</label>
             <div class="image-upload-container">
-              <div class="image-preview" *ngFor="let img of parkingData.images; let i = index">
+              <div class="image-preview" *ngFor="let img of imagePreviews; let i = index">
                 <img [src]="img" alt="Parking spot preview">
                 <button type="button" class="remove-img-btn" (click)="removeImage(i)">
                   <span class="material-icons-outlined">close</span>
                 </button>
               </div>
               
-              <label class="upload-btn" *ngIf="parkingData.images.length < 4">
+              <label class="upload-btn" *ngIf="imagePreviews.length < 4">
                 <span class="material-icons-outlined">add_photo_alternate</span>
                 <span>Add Photo</span>
                 <input type="file" multiple accept="image/*" (change)="onImageUpload($event)" hidden>
               </label>
             </div>
+
           </div>
 
           <div class="modal-footer">
@@ -100,3 +123,5 @@
     </div>
   </div>
 </div>
+
+
